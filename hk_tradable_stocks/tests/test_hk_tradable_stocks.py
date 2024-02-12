@@ -1,4 +1,6 @@
-from ccass.main import fetch_stock_list
+import pandas as pd
+
+from hk_tradable_stocks.main import fetch_stock_list
 import requests
 from datetime import datetime
 import pytz
@@ -24,19 +26,25 @@ def test_fetch_stock_list():
         {"c": "00002", "n": "CLP HOLDINGS LIMITED"},
     ]
     mock_resp = MockResponse(mock_json, 200)
-    exp_res = ["00001", "00002"]
+    exp_res = pd.DataFrame(data=mock_json)
     with patch.object(requests, "get", return_value=mock_resp):
         res = fetch_stock_list(datetime.now(tz=pytz.timezone("Asia/Hong_Kong")))
-    assert res == exp_res
+    assert res.equals(exp_res)
+
+
+def test_storage_validity():
+    from hk_tradable_stocks import DESTINATION, BUCKET_REGION
+    assert len(BUCKET_REGION.split("-")) == 3
+    assert DESTINATION.startswith("S3://")
 
 
 @patch.object(target=requests, attribute="get")
-def test_fetch_stock_list_deco(mock_req_get):
+def test_fetch_stock_list_using_patch_decorator(mock_req_get):
     mock_json = [
         {"c": "00001", "n": "CK HUTCHISON HOLDINGS LIMITED"},
         {"c": "00002", "n": "CLP HOLDINGS LIMITED"},
     ]
     mock_req_get.return_value = MockResponse(mock_json, 200)
-    exp_res = ["00001", "00002"]
+    exp_res = pd.DataFrame(data=mock_json)
     res = fetch_stock_list(dt=datetime.now(tz=pytz.timezone("Asia/Hong_Kong")))
-    assert res == exp_res
+    assert res.equals(exp_res)

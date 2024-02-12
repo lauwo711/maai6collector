@@ -1,6 +1,6 @@
 BUCKET_REGION = "ap-east-1"
 
-DESTINATION = "S3://maai6-data-bkt/ccass/"
+DESTINATION = "S3://maai6-data-bkt/hk_tradable_stocks/"
 
 BASE_URL = "https://www3.hkexnews.hk/{}"
 

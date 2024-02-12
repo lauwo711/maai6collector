@@ -5,7 +5,7 @@ import logging
 import pytz
 import sys
 from tenacity import retry, stop_after_attempt, wait_fixed, retry_if_result
-from ccass import BASE_URL, STOCK_PAYLOAD, STOCK_LIST_END_PT, HEADERS, DESTINATION, BUCKET_REGION
+from hk_tradable_stocks import BASE_URL, STOCK_PAYLOAD, STOCK_LIST_END_PT, HEADERS, DESTINATION, BUCKET_REGION
 from utils import Storage, DEFAULT_LOGGING_FORMAT
 
 
@@ -39,7 +39,8 @@ def fetch_stock_list(dt: datetime) -> pd.DataFrame:
 def run():
     df = fetch_stock_list(datetime.now(tz=pytz.timezone("Asia/Hong_Kong")))
     storage = Storage(full_path=DESTINATION, region_name=BUCKET_REGION)
-    storage.save_df(df, "test.csv")
+    file_ts = datetime.now(tz=pytz.timezone("Asia/Hong_Kong")).strftime("%Y%m%d_%H%M%S")
+    storage.save_df(df, f"hk_tradable_stocks_{file_ts}.csv")
     return
 
 

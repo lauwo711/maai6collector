@@ -1,21 +1,11 @@
-# **Herlab**:handbag:
+# **maai6collector**:iphone:
 
 ## Intro<br>
-A service to monitor new items from https://www.hermes.com/. New item details will be sent to a Telegram channel.
+A project just to collect some opensource data.
 
-## Infra<br>
-Image pushed from local to Docker Hub. Then deploy it on AWS ECS using a public subnet and internet gateway (NAT gateway
-is expensive). AWS secret manager stores the token, which are then injected to the container as environment 
-variables.
+## Project structure<br>
+Each datasource has its own directory to store its pyproject.toml in order to minimize dependency. <br>
+Each datasource has its own docker image build.<br>
+Goal is to deploy each image with their schedule on ECS using infra as code. :sparkles:
 
-## Packages used<br>
-poetry - manage dependency<br>
-tenacity - retry http request<br>
-fake_useragent - prevent getting block by Hermes :running: <br>
-random sleep time and referrers - prevent getting block by Hermes :running:
-
-# Todo
-add validator to handle failed request<br>
-use asyncio for larger page size<br>
-use threading for sending tg message<br>
-provide arg parse for scraping different categories of product
+docker build --build-arg DATA_DIR=hk_tradable_stocks --tag=<tag_name> .

@@ -52,7 +52,7 @@ class S3Client:
                 return
         r = self.s3c.put_object(Bucket=self.bucket, Key=f"{self.key}{path}", Body=data)
         if r["ResponseMetadata"]["HTTPStatusCode"] == 200:
-            logger.info(f"File saved on s3: {self.full_path}{path}")
+            logger.info(f"File saved on: {self.full_path}{path}")
         else:
             logger.error(f"File SAVING ERROR on s3: {self.full_path}{path}")
         return
